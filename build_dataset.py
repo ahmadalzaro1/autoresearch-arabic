@@ -17,6 +17,7 @@ import argparse
 import json
 import os
 import re
+import sys
 import threading
 import unicodedata
 from pathlib import Path
@@ -378,6 +379,162 @@ def compute_collision_stats(vocalized: list[str], non_vocalized: list[str]):
 
 
 # ---------------------------------------------------------------------------
+# Validation
+# ---------------------------------------------------------------------------
+
+def _compute_char_distribution(condition: str, data_dir: Path) -> dict:
+    """Count characters across all shards and return top-20 as repr(char) -> count."""
+    import collections
+
+    counter: collections.Counter = collections.Counter()
+    shards = sorted(data_dir.glob("shard_*.parquet"))
+    for shard in shards:
+        table = pq.read_table(shard)
+        for text in table.column("text").to_pylist():
+            if text:
+                counter.update(text)
+
+    top_20 = counter.most_common(20)
+    # Print a short preview of the top 10 chars for visual inspection
+    preview = " ".join(repr(ch) for ch, _ in top_20[:10])
+    print(f"  [{condition}] Top-20 chars: {preview} ...")
+
+    return {repr(ch): cnt for ch, cnt in top_20}
+
+
+def validate_condition(condition: str) -> dict:
+    """Run 4 mandatory validation checks on a built condition.
+
+    Checks:
+      1. shards_loadable  — all shard files can be read by pyarrow
+      2. row_count_matches — actual row count matches metadata.txt
+      3. no_empty_texts   — no None or empty strings in any shard
+      4. char_distribution — top-20 chars (visual, never hard-fails)
+
+    D3 extra gate: atomic_mapping.json must have >= 252 entries.
+
+    Calls sys.exit(1) on any hard-fail (checks 1-3, D3 gate).
+    Returns a results dict with bool values for checks 1-3 and a dict for 4.
+    """
+    data_dir = BASE_CACHE / condition / "data"
+    meta_path = BASE_CACHE / condition / "metadata.txt"
+
+    if not data_dir.exists():
+        print(f"  [{condition}] FAIL: data directory not found: {data_dir}")
+        sys.exit(1)
+    if not meta_path.exists():
+        print(f"  [{condition}] FAIL: metadata.txt not found: {meta_path}")
+        sys.exit(1)
+
+    shards = sorted(data_dir.glob("shard_*.parquet"))
+    if not shards:
+        print(f"  [{condition}] FAIL: no shard files found in {data_dir}")
+        sys.exit(1)
+
+    # --- Parse metadata ---
+    meta: dict[str, str] = {}
+    for line in meta_path.read_text(encoding="utf-8").splitlines():
+        if "=" in line:
+            key, _, value = line.partition("=")
+            meta[key.strip()] = value.strip()
+
+    val_filename = meta.get("val_filename", "")
+    expected_train = int(meta.get("train_docs", 0))
+    expected_val = int(meta.get("val_docs", 0))
+
+    # --- Check 1: shards_loadable ---
+    load_ok = True
+    for shard in shards:
+        try:
+            pq.read_table(shard)
+        except Exception as exc:  # noqa: BLE001
+            print(f"  [{condition}] FAIL shards_loadable: {shard.name} — {exc}")
+            load_ok = False
+    if not load_ok:
+        sys.exit(1)
+    print(f"  [{condition}] PASS shards_loadable")
+
+    # --- Check 2: row_count_matches ---
+    train_rows = 0
+    val_rows = 0
+    for shard in shards:
+        table = pq.read_table(shard)
+        if shard.name == val_filename:
+            val_rows += table.num_rows
+        else:
+            train_rows += table.num_rows
+
+    row_ok = (train_rows == expected_train) and (val_rows == expected_val)
+    if not row_ok:
+        print(
+            f"  [{condition}] FAIL row_count_matches: "
+            f"train expected {expected_train} got {train_rows}, "
+            f"val expected {expected_val} got {val_rows}"
+        )
+        sys.exit(1)
+    print(f"  [{condition}] PASS row_count_matches ({train_rows} train, {val_rows} val)")
+
+    # --- Check 3: no_empty_texts ---
+    empty_ok = True
+    for shard in shards:
+        table = pq.read_table(shard)
+        texts = table.column("text").to_pylist()
+        if any(t is None or t == "" for t in texts):
+            print(f"  [{condition}] FAIL no_empty_texts: empty/None text found in {shard.name}")
+            empty_ok = False
+    if not empty_ok:
+        sys.exit(1)
+    print(f"  [{condition}] PASS no_empty_texts")
+
+    # --- Check 4: char_distribution (visual only, no hard-fail) ---
+    char_dist = _compute_char_distribution(condition, data_dir)
+
+    # --- D3 integrity gate ---
+    if condition == "d3":
+        mapping_path = BASE_CACHE / "atomic_mapping.json"
+        if not mapping_path.exists():
+            print(f"  [d3] FAIL D3 gate: atomic_mapping.json not found at {mapping_path}")
+            sys.exit(1)
+        with open(mapping_path, encoding="utf-8") as f:
+            mapping = json.load(f)
+        if len(mapping) < 252:
+            print(f"  [d3] FAIL D3 gate: atomic_mapping.json has {len(mapping)} entries (need >= 252)")
+            sys.exit(1)
+        print(f"  [d3] PASS D3 gate: atomic_mapping.json has {len(mapping)} entries")
+
+    print(f"  [{condition}] All mandatory checks PASSED")
+
+    return {
+        "shards_loadable": True,
+        "row_count_matches": True,
+        "no_empty_texts": True,
+        "char_distribution": char_dist,
+    }
+
+
+def write_validation_report(condition: str, results: dict) -> None:
+    """Merge per-condition validation results into validation_report.json.
+
+    Reads the existing report if present, updates the condition key, and
+    writes back with ensure_ascii=False so Arabic chars survive round-trip.
+    """
+    report_path = BASE_CACHE / "validation_report.json"
+    report: dict = {}
+    if report_path.exists():
+        with open(report_path, encoding="utf-8") as f:
+            try:
+                report = json.load(f)
+            except json.JSONDecodeError:
+                report = {}
+
+    report[condition] = results
+
+    with open(report_path, "w", encoding="utf-8") as f:
+        json.dump(report, f, ensure_ascii=False, indent=2)
+    print(f"  Validation report updated: {report_path}")
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -428,6 +585,9 @@ def main():
             process_condition("d2", vocalized)  # strip from vocalized, not pre-stripped
         elif condition == "d3":
             process_condition("d3", vocalized, atomic_mapping)
+        print(f"\nValidating condition: {condition}")
+        val_results = validate_condition(condition)
+        write_validation_report(condition, val_results)
 
     print("\nDone! Dataset conditions ready at:", BASE_CACHE)
     print("Next: run 'uv run prepare.py --condition d1' to train tokenizer for D1")

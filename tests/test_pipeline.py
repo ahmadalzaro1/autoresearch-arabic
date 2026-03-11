@@ -7,6 +7,7 @@ Fixture-based tests (D1/D2/D3 shard shape/content) pass immediately.
 """
 import json
 import pytest
+import pyarrow as pa
 import pyarrow.parquet as pq
 from pathlib import Path
 
@@ -358,12 +359,12 @@ def test_validate_condition_returns_required_keys(tmp_path, monkeypatch):
     shard_path = data_dir / "shard_00000.parquet"
     pq.write_table(table, shard_path)
 
-    # Write matching metadata.txt (2 docs total, 2 train, 0 val, but val shard = shard_00001)
-    # For simplicity: 2 docs, 1 train shard, val_shard=0 so val = shard_00000
+    # Write matching metadata.txt — shard_00000 is the sole (val) shard with 2 rows.
+    # train_docs=0 because there are no train shards (only val shard).
     meta = (
         f"condition={condition}\n"
-        f"train_docs=1\n"
-        f"val_docs=1\n"
+        f"train_docs=0\n"
+        f"val_docs=2\n"
         f"train_shards=0\n"
         f"val_shard=0\n"
         f"val_filename=shard_00000.parquet\n"
