@@ -310,3 +310,117 @@ def test_validation_report():
         assert cond_data.get("row_count_matches") is True, f"{condition}: row_count_matches check failed"
         assert cond_data.get("no_empty_texts") is True, f"{condition}: no_empty_texts check failed"
         assert "char_distribution" in cond_data, f"{condition}: missing char_distribution"
+
+
+# ---------------------------------------------------------------------------
+# DATA-02/03/04 Wave 3: validate_condition() unit tests
+# ---------------------------------------------------------------------------
+
+def test_validate_condition_exists():
+    """validate_condition must be importable from build_dataset."""
+    import build_dataset
+    assert hasattr(build_dataset, "validate_condition"), \
+        "build_dataset must export validate_condition"
+    assert callable(build_dataset.validate_condition)
+
+
+def test_write_validation_report_exists():
+    """write_validation_report must be importable from build_dataset."""
+    import build_dataset
+    assert hasattr(build_dataset, "write_validation_report"), \
+        "build_dataset must export write_validation_report"
+    assert callable(build_dataset.write_validation_report)
+
+
+def test_compute_char_distribution_exists():
+    """_compute_char_distribution must be importable from build_dataset."""
+    import build_dataset
+    assert hasattr(build_dataset, "_compute_char_distribution"), \
+        "build_dataset must export _compute_char_distribution"
+    assert callable(build_dataset._compute_char_distribution)
+
+
+def test_validate_condition_returns_required_keys(tmp_path, monkeypatch):
+    """validate_condition returns dict with all 4 mandatory keys."""
+    import build_dataset
+
+    # Build a minimal valid cache structure
+    condition = "d1"
+    data_dir = tmp_path / condition / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+
+    # Write a valid shard with real Arabic diacritized text
+    texts = [
+        "\u0628\u0650\u0633\u0652\u0645\u0650 \u0627\u0644\u0644\u0651\u064e\u0647\u0650",  # Bismillah
+        "\u0627\u0644\u0652\u062d\u064e\u0645\u0652\u062f\u064f \u0644\u0650\u0644\u0651\u064e\u0647\u0650",  # Alhamdu lillah
+    ]
+    table = pa.table({"text": texts})
+    shard_path = data_dir / "shard_00000.parquet"
+    pq.write_table(table, shard_path)
+
+    # Write matching metadata.txt (2 docs total, 2 train, 0 val, but val shard = shard_00001)
+    # For simplicity: 2 docs, 1 train shard, val_shard=0 so val = shard_00000
+    meta = (
+        f"condition={condition}\n"
+        f"train_docs=1\n"
+        f"val_docs=1\n"
+        f"train_shards=0\n"
+        f"val_shard=0\n"
+        f"val_filename=shard_00000.parquet\n"
+    )
+    meta_path = tmp_path / condition / "metadata.txt"
+    meta_path.write_text(meta, encoding="utf-8")
+
+    monkeypatch.setattr(build_dataset, "BASE_CACHE", tmp_path)
+
+    result = build_dataset.validate_condition(condition)
+    assert isinstance(result, dict), "validate_condition must return a dict"
+    assert "shards_loadable" in result
+    assert "row_count_matches" in result
+    assert "no_empty_texts" in result
+    assert "char_distribution" in result
+    assert result["shards_loadable"] is True
+    assert result["no_empty_texts"] is True
+
+
+def test_write_validation_report_writes_json(tmp_path, monkeypatch):
+    """write_validation_report writes validation_report.json and merges across conditions."""
+    import build_dataset
+
+    monkeypatch.setattr(build_dataset, "BASE_CACHE", tmp_path)
+
+    results_d1 = {
+        "shards_loadable": True,
+        "row_count_matches": True,
+        "no_empty_texts": True,
+        "char_distribution": {"a": 10},
+    }
+    results_d2 = {
+        "shards_loadable": True,
+        "row_count_matches": True,
+        "no_empty_texts": True,
+        "char_distribution": {"b": 5},
+    }
+
+    build_dataset.write_validation_report("d1", results_d1)
+    build_dataset.write_validation_report("d2", results_d2)
+
+    report_path = tmp_path / "validation_report.json"
+    assert report_path.exists(), "validation_report.json must be written"
+
+    with open(report_path, encoding="utf-8") as f:
+        report = json.load(f)
+
+    assert "d1" in report, "d1 key must be present"
+    assert "d2" in report, "d2 key must be present — must merge, not overwrite"
+    assert report["d1"]["shards_loadable"] is True
+    assert report["d2"]["shards_loadable"] is True
+
+
+def test_main_calls_validate_condition():
+    """main() source code must call validate_condition and write_validation_report."""
+    import inspect
+    import build_dataset
+    src = inspect.getsource(build_dataset.main)
+    assert "validate_condition" in src, "main() must call validate_condition"
+    assert "write_validation_report" in src, "main() must call write_validation_report"
