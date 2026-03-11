@@ -22,7 +22,12 @@ Four phases take the experiment from raw dataset through publishable paper. Phas
   2. Token counts and character distributions are verified for each shard (no silent truncation or encoding corruption)
   3. Homograph collision rate is computed and logged — ألم-style ambiguities counted at corpus scale
   4. D3 PUA mapping table is complete (all letter+harakah combinations covered, ~252 combos)
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Test scaffold: install pytest, create tests/ with conftest fixtures and six stub tests
+- [ ] 01-02-PLAN.md — Extend build_dataset.py: tqdm download wrapper + context-window collision metric + JSON sidecar
+- [ ] 01-03-PLAN.md — Add inline validation to build_dataset.py + create validate_dataset.py standalone validator
 
 ### Phase 2: Tokenizer & Baseline
 **Goal**: Each condition has a trained BPE tokenizer and a measured baseline val_bpb on identical architecture, establishing the benchmark the search will beat
@@ -61,7 +66,7 @@ Four phases take the experiment from raw dataset through publishable paper. Phas
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Data Pipeline | 0/TBD | Not started | - |
+| 1. Data Pipeline | 0/3 | In progress | - |
 | 2. Tokenizer & Baseline | 0/TBD | Not started | - |
 | 3. Architecture Search | 0/TBD | Not started | - |
 | 4. Analysis & Paper | 0/TBD | Not started | - |
