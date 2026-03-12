@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 02-tokenizer-baseline-02-01-PLAN.md
-last_updated: "2026-03-12T00:26:17Z"
-last_activity: 2026-03-12 — Completed 02-01 Nyquist test stubs; 3 RED tests confirm Plan 02 targets
+status: completed
+stopped_at: Completed 02-tokenizer-baseline-02-02-PLAN.md
+last_updated: "2026-03-12T00:32:31.190Z"
+last_activity: 2026-03-12 — Completed 02-01 Nyquist test stubs; human-verify approved
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 4
-  completed_plans: 4
-  percent: 0
+  total_plans: 6
+  completed_plans: 5
+  percent: 100
 ---
 
 # Project State
@@ -54,6 +54,7 @@ Progress: [██████████] 100% (Phase 1) | [███░░░�
 | Phase 01-data-pipeline P02 | 3 | 2 tasks | 2 files |
 | Phase 01-data-pipeline P03 | 10 | 3 tasks | 3 files |
 | Phase 02-tokenizer-baseline P01 | 2 | 3 tasks | 3 files |
+| Phase 02-tokenizer-baseline P02 | 2 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -77,6 +78,9 @@ Recent decisions affecting current work:
 - [Phase 02-tokenizer-baseline]: 02-01: Factory fixture over pytest-parametrize — tiny_corpus_parquet yields callable make_corpus(condition) enabling monkeypatching of BASE_CACHE before corpus creation
 - [Phase 02-tokenizer-baseline]: 02-01: Unit RED tests inspect source text and argparse --help rather than running full scripts — fast, environment-independent, unambiguous about missing features
 - [Phase 02-tokenizer-baseline]: 02-01: _encode_d3 helper extracted from d3_shard_path fixture to avoid duplication in make_corpus
+- [Phase 02-tokenizer-baseline]: 02-02: get_dirs() default VOCAB_SIZE=8192 maps to tokenizer/ path; only non-default sizes get tokenizer_{size}/ suffix preserving train.py backward compat
+- [Phase 02-tokenizer-baseline]: 02-02: val_bpb sanity check (1.0, 10.0) prints WARNING but does not raise — preserves exit 0 after training
+- [Phase 02-tokenizer-baseline]: 02-02: train.py uses top-level import json (not inline) — standard stdlib import convention
 
 ### Pending Todos
 
@@ -88,6 +92,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T00:26:17Z
-Stopped at: Completed 02-tokenizer-baseline-02-01-PLAN.md
+Last session: 2026-03-12T00:32:31.188Z
+Stopped at: Completed 02-tokenizer-baseline-02-02-PLAN.md
 Resume file: None
