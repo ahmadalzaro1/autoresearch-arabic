@@ -38,7 +38,12 @@ Plans:
   2. Fertility table (tokens/word × condition × vocab size) is computed and shows measurable difference between D1/D2/D3
   3. Baseline val_bpb recorded for D1, D2, D3 on fixed depth=4 architecture
   4. D2 baseline is lower than D1 baseline (stripping reduces surface complexity — expected sanity check)
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Wave 0 test stubs: conftest tiny_corpus_parquet fixture + test_tokenizer.py (RED) + test_baseline.py (RED)
+- [ ] 02-02-PLAN.md — Extend prepare.py (--vocab-size flag + write_fertility_report) + extend train.py (baseline_results.json writer)
+- [ ] 02-03-PLAN.md — Run tokenizer sweep (9 runs) + baseline training (3 x 300s) + human verify fertility and D2 < D1 sanity check
 
 ### Phase 3: Architecture Search
 **Goal**: Autoresearch has run 70+ experiments per condition overnight and best-performing architecture configs per condition are identified
@@ -67,6 +72,6 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Data Pipeline | 3/3 | Complete   | 2026-03-12 |
-| 2. Tokenizer & Baseline | 0/TBD | Not started | - |
+| 2. Tokenizer & Baseline | 0/3 | Planned | - |
 | 3. Architecture Search | 0/TBD | Not started | - |
 | 4. Analysis & Paper | 0/TBD | Not started | - |
