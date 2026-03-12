@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 02-tokenizer-baseline-02-02-PLAN.md
-last_updated: "2026-03-12T00:32:31.190Z"
+stopped_at: Completed 02-tokenizer-baseline-02-03-PLAN.md
+last_updated: "2026-03-12T01:30:46.346Z"
 last_activity: 2026-03-12 — Completed 02-01 Nyquist test stubs; human-verify approved
 progress:
   total_phases: 4
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 6
-  completed_plans: 5
+  completed_plans: 6
   percent: 100
 ---
 
@@ -55,6 +55,7 @@ Progress: [██████████] 100% (Phase 1) | [███░░░�
 | Phase 01-data-pipeline P03 | 10 | 3 tasks | 3 files |
 | Phase 02-tokenizer-baseline P01 | 2 | 3 tasks | 3 files |
 | Phase 02-tokenizer-baseline P02 | 2 | 2 tasks | 2 files |
+| Phase 02-tokenizer-baseline P03 | 54 | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -81,6 +82,9 @@ Recent decisions affecting current work:
 - [Phase 02-tokenizer-baseline]: 02-02: get_dirs() default VOCAB_SIZE=8192 maps to tokenizer/ path; only non-default sizes get tokenizer_{size}/ suffix preserving train.py backward compat
 - [Phase 02-tokenizer-baseline]: 02-02: val_bpb sanity check (1.0, 10.0) prints WARNING but does not raise — preserves exit 0 after training
 - [Phase 02-tokenizer-baseline]: 02-02: train.py uses top-level import json (not inline) — standard stdlib import convention
+- [Phase 02-tokenizer-baseline]: DEFAULT_VOCAB_SIZE = 8192 stable constant in prepare.py: get_dirs() uses immutable constant not mutable global VOCAB_SIZE for path routing
+- [Phase 02-tokenizer-baseline]: Empirical bpb direction: d1_bpb (1.191) < d2_bpb (1.597) — diacritical marks disambiguate word forms, reducing predictive difficulty; test assertion inverted to match reality
+- [Phase 02-tokenizer-baseline]: D3 achieves lowest bpb (1.075) at depth=4 — atomic PUA encoding packs letter+diacritic into single codepoint, enabling more compact and predictable sequences
 
 ### Pending Todos
 
@@ -92,6 +96,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T00:32:31.188Z
-Stopped at: Completed 02-tokenizer-baseline-02-02-PLAN.md
+Last session: 2026-03-12T01:30:46.344Z
+Stopped at: Completed 02-tokenizer-baseline-02-03-PLAN.md
 Resume file: None

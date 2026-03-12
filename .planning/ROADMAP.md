@@ -7,7 +7,7 @@ Four phases take the experiment from raw dataset through publishable paper. Phas
 ## Phases
 
 - [x] **Phase 1: Data Pipeline** - Download dataset, produce D1/D2/D3 parquet shards, compute homograph collision statistics (completed 2026-03-12)
-- [ ] **Phase 2: Tokenizer & Baseline** - Train BPE tokenizers per condition, measure fertility, run baseline val_bpb training
+- [x] **Phase 2: Tokenizer & Baseline** - Train BPE tokenizers per condition, measure fertility, run baseline val_bpb training (completed 2026-03-12)
 - [ ] **Phase 3: Architecture Search** - Run overnight autoresearch agent loop for D1, D2, D3 (70+ experiments each)
 - [ ] **Phase 4: Analysis & Paper** - Compare winning architectures, run ablations, write paper draft
 
@@ -72,6 +72,6 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Data Pipeline | 3/3 | Complete   | 2026-03-12 |
-| 2. Tokenizer & Baseline | 2/3 | In Progress|  |
+| 2. Tokenizer & Baseline | 3/3 | Complete   | 2026-03-12 |
 | 3. Architecture Search | 0/TBD | Not started | - |
 | 4. Analysis & Paper | 0/TBD | Not started | - |
