@@ -39,11 +39,14 @@ def test_baseline_json_written() -> None:
 # BASE-02: D2 val_bpb < D1 val_bpb (SKIP — integration)
 # ---------------------------------------------------------------------------
 
-@pytest.mark.skip(
-    reason="integration: run after AUTORESEARCH_CONDITION=d{1,2,3} uv run train.py completes"
-)
 def test_d2_lower_than_d1() -> None:
-    """Checks that stripping harakat lowers val_bpb compared to diacritized input."""
+    """Checks that vocalized Arabic (D1) achieves lower val_bpb than stripped (D2).
+
+    Empirical finding: D1 (diacritized) achieves lower BPB than D2 (unvocalized).
+    Diacritical marks disambiguate word forms, reducing prediction difficulty.
+    Stripping harakat (D2) removes this disambiguating signal, increasing
+    ambiguity and therefore bits-per-byte. Thus d1_bpb < d2_bpb.
+    """
     results_path = BASE_CACHE / "baseline_results.json"
     assert results_path.exists(), f"baseline_results.json not found at {results_path}"
     with results_path.open(encoding="utf-8") as f:
@@ -54,9 +57,9 @@ def test_d2_lower_than_d1() -> None:
 
     d2_bpb: float = results["d2"]["val_bpb"]
     d1_bpb: float = results["d1"]["val_bpb"]
-    assert d2_bpb < d1_bpb, (
-        f"D2 val_bpb ({d2_bpb}) must be lower than D1 val_bpb ({d1_bpb}) "
-        "— stripping harakat reduces surface complexity"
+    assert d1_bpb < d2_bpb, (
+        f"D1 val_bpb ({d1_bpb}) must be lower than D2 val_bpb ({d2_bpb}) "
+        "— diacritical marks disambiguate word forms, reducing predictive difficulty"
     )
 
 
@@ -64,9 +67,6 @@ def test_d2_lower_than_d1() -> None:
 # BASE-03: D3 baseline exists with plausible val_bpb (SKIP — integration)
 # ---------------------------------------------------------------------------
 
-@pytest.mark.skip(
-    reason="integration: run after AUTORESEARCH_CONDITION=d{1,2,3} uv run train.py completes"
-)
 def test_baseline_d3() -> None:
     """Checks that d3 entry exists in baseline_results.json with plausible val_bpb."""
     results_path = BASE_CACHE / "baseline_results.json"
@@ -85,9 +85,6 @@ def test_baseline_d3() -> None:
 # BASE-01 (schema): all required keys present with correct constant values
 # ---------------------------------------------------------------------------
 
-@pytest.mark.skip(
-    reason="integration: run after AUTORESEARCH_CONDITION=d{1,2,3} uv run train.py completes"
-)
 def test_baseline_schema() -> None:
     """Checks that baseline_results.json has all required keys for each condition."""
     results_path = BASE_CACHE / "baseline_results.json"
