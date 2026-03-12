@@ -68,9 +68,9 @@ Research pipeline studying how Arabic diacritical marks (harakat) should be enco
 | BASE-01 | Phase 2 | Complete |
 | BASE-02 | Phase 2 | Complete |
 | BASE-03 | Phase 2 | Complete |
-| SRCH-01 | Phase 3 | Pending |
-| SRCH-02 | Phase 3 | Pending |
-| SRCH-03 | Phase 3 | Pending |
+| SRCH-01 | Phase 3 | Complete |
+| SRCH-02 | Phase 3 | Complete |
+| SRCH-03 | Phase 3 | Complete |
 | ANLZ-01 | Phase 4 | Pending |
 | ANLZ-02 | Phase 4 | Pending |
 | ANLZ-03 | Phase 4 | Pending |

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Phase 3 context gathered
-last_updated: "2026-03-12T01:57:19.827Z"
+stopped_at: Completed 03-architecture-search 03-01-PLAN.md
+last_updated: "2026-03-12T02:15:54.358Z"
 last_activity: 2026-03-12 — Completed Phase 2 tokenizer-baseline (3/3 plans); D3 best baseline bpb=1.075
 progress:
   total_phases: 4
   completed_phases: 2
-  total_plans: 6
-  completed_plans: 6
+  total_plans: 10
+  completed_plans: 7
   percent: 100
 ---
 
@@ -56,6 +56,7 @@ Progress: [████████████████████] 6/6 pla
 | Phase 02-tokenizer-baseline P01 | 2 | 3 tasks | 3 files |
 | Phase 02-tokenizer-baseline P02 | 2 | 2 tasks | 2 files |
 | Phase 02-tokenizer-baseline P03 | 54 | 3 tasks | 3 files |
+| Phase 03-architecture-search P03-01 | 1 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -85,6 +86,9 @@ Recent decisions affecting current work:
 - [Phase 02-tokenizer-baseline]: DEFAULT_VOCAB_SIZE = 8192 stable constant in prepare.py: get_dirs() uses immutable constant not mutable global VOCAB_SIZE for path routing
 - [Phase 02-tokenizer-baseline]: Empirical bpb direction: d1_bpb (1.191) < d2_bpb (1.597) — diacritical marks disambiguate word forms, reducing predictive difficulty; test assertion inverted to match reality
 - [Phase 02-tokenizer-baseline]: D3 achieves lowest bpb (1.075) at depth=4 — atomic PUA encoding packs letter+diacritic into single codepoint, enabling more compact and predictable sequences
+- [Phase 03-architecture-search]: test_search.py is standalone (no conftest fixtures) — keeps Phase 3 verification independent of Phase 1/2 fixtures
+- [Phase 03-architecture-search]: _check_condition() helper centralises TSV validation logic shared by all three condition tests
+- [Phase 03-architecture-search]: Skip-on-absent pattern (not xfail): absence is normal pre-run state, not test failure
 
 ### Pending Todos
 
@@ -96,6 +100,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T01:57:19.824Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-architecture-search/03-CONTEXT.md
+Last session: 2026-03-12T02:15:54.356Z
+Stopped at: Completed 03-architecture-search 03-01-PLAN.md
+Resume file: None
