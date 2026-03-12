@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 03-architecture-search 03-01-PLAN.md
-last_updated: "2026-03-12T02:15:54.358Z"
+stopped_at: Completed 03-architecture-search 03-02-PLAN.md
+last_updated: "2026-03-12T09:53:18.997Z"
 last_activity: 2026-03-12 — Completed Phase 2 tokenizer-baseline (3/3 plans); D3 best baseline bpb=1.075
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 10
-  completed_plans: 7
+  completed_plans: 8
   percent: 100
 ---
 
@@ -57,6 +57,7 @@ Progress: [████████████████████] 6/6 pla
 | Phase 02-tokenizer-baseline P02 | 2 | 2 tasks | 2 files |
 | Phase 02-tokenizer-baseline P03 | 54 | 3 tasks | 3 files |
 | Phase 03-architecture-search P03-01 | 1 | 1 tasks | 1 files |
+| Phase 03-architecture-search P02 | 480 | 4 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -89,6 +90,9 @@ Recent decisions affecting current work:
 - [Phase 03-architecture-search]: test_search.py is standalone (no conftest fixtures) — keeps Phase 3 verification independent of Phase 1/2 fixtures
 - [Phase 03-architecture-search]: _check_condition() helper centralises TSV validation logic shared by all three condition tests
 - [Phase 03-architecture-search]: Skip-on-absent pattern (not xfail): absence is normal pre-run state, not test failure
+- [Phase 03-architecture-search]: D3 best config: DEPTH=2 HEAD_DIM=96 WINDOW_PATTERN=SS MATRIX_LR=0.045 val_bpb=0.889682 (17% below baseline 1.075381)
+- [Phase 03-architecture-search]: WINDOW_PATTERN=SS largest single gain (0.961->0.905); manual revert protocol used for all 61 discards due to destructive-reset hook
+- [Phase 03-architecture-search]: search_results.json uses best_val_bpb key (test requirement); extract_best.py committed on main for reuse in D1/D2 loops
 
 ### Pending Todos
 
@@ -100,6 +104,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T02:15:54.356Z
-Stopped at: Completed 03-architecture-search 03-01-PLAN.md
+Last session: 2026-03-12T09:53:18.995Z
+Stopped at: Completed 03-architecture-search 03-02-PLAN.md
 Resume file: None
