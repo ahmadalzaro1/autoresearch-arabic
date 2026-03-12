@@ -54,7 +54,13 @@ Plans:
   2. Best val_bpb per condition is below the Phase 2 baseline (search found improvements)
   3. Winning architecture configs (depth, heads, window) are recorded per condition
   4. Search results are stored in condition-labeled output directories for reproducibility
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — Wave 0 test scaffold: tests/test_search.py with four smoke tests (skips pre-run, passes post-run)
+- [ ] 03-02-PLAN.md — D3 overnight run: branch autoresearch/arabic-d3, 70+ experiments, results_d3.tsv, d3 entry in search_results.json
+- [ ] 03-03-PLAN.md — D1 overnight run: branch autoresearch/arabic-d1, 70+ experiments, results_d1.tsv, d1 entry in search_results.json
+- [ ] 03-04-PLAN.md — D2 overnight run: branch autoresearch/arabic-d2, 70+ experiments, results_d2.tsv, complete search_results.json
 
 ### Phase 4: Analysis & Paper
 **Goal**: A paper draft exists that makes the D3 encoding argument quantitatively, with comparison tables and ablation results
@@ -73,5 +79,5 @@ Plans:
 |-------|----------------|--------|-----------|
 | 1. Data Pipeline | 3/3 | Complete   | 2026-03-12 |
 | 2. Tokenizer & Baseline | 3/3 | Complete   | 2026-03-12 |
-| 3. Architecture Search | 0/TBD | Not started | - |
+| 3. Architecture Search | 0/4 | Not started | - |
 | 4. Analysis & Paper | 0/TBD | Not started | - |
