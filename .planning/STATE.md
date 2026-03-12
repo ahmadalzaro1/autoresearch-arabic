@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-12)
 
 **Core value:** Prove that D3 atomic diacritical encoding closes the disambiguation tax that D2 (stripped) forces models to pay, producing a publishable result targeting ArabicNLP/EMNLP
-**Current focus:** Phase 2 — Tokenizer Baseline
+**Current focus:** Phase 3 — Architecture Search
 
 ## Current Position
 
-Phase: 2 of 4 (Tokenizer Baseline)
-Plan: 1 of 3 in current phase — COMPLETE
-Status: 02-01 done; ready for 02-02 (prepare.py extensions)
-Last activity: 2026-03-12 — Completed 02-01 Nyquist test stubs; human-verify approved
+Phase: 3 of 4 (Architecture Search)
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-03-12 — Completed Phase 2 tokenizer-baseline (3/3 plans); D3 best baseline bpb=1.075
 
-Progress: [██████████] 100% (Phase 1) | [███░░░░░░░] 33% (Phase 2)
+Progress: [████████████████████] 6/6 plans (100%) — Phases 1+2 complete
 
 ## Performance Metrics
 
@@ -96,6 +96,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12T01:30:46.344Z
-Stopped at: Completed 02-tokenizer-baseline-02-03-PLAN.md
+Last session: 2026-03-12
+Stopped at: Phase 2 complete, ready to plan Phase 3 (architecture-search)
 Resume file: None

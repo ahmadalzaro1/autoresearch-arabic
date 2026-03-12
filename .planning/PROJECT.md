@@ -12,14 +12,13 @@ Prove that stripping harakat from Arabic text forces models to waste capacity on
 
 ### Validated
 
-(None yet — experiments to validate)
+- ✓ Dataset pipeline: D1/D2/D3 parquet shards produced — Phase 1
+- ✓ Homograph collision statistics at corpus scale — Phase 1
+- ✓ Tokenizer fertility analysis: D1=2.519, D2=1.467, D3=2.193 tokens/word @ 8192 vocab — Phase 2
+- ✓ Baseline val_bpb per condition: D3=1.075, D1=1.191, D2=1.597 (depth=4, SSSL) — Phase 2
 
 ### Active
 
-- [ ] Dataset pipeline: Download Abdou/arabic-tashkeel-dataset and produce D1/D2/D3 parquet shards
-- [ ] Homograph collision statistics at corpus scale (the Mutanabbi proof, quantified)
-- [ ] Tokenizer fertility analysis: tokens/word per condition × vocab size
-- [ ] Baseline val_bpb for each condition (D1, D2, D3) on identical architecture
 - [ ] Overnight autoresearch run per condition (70+ experiments each)
 - [ ] Optimal architecture comparison across D1 vs D2 vs D3
 - [ ] Paper draft targeting ArabicNLP Workshop or EMNLP
@@ -56,11 +55,14 @@ Prove that stripping harakat from Arabic text forces models to waste capacity on
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| MLX fork over PyTorch/MPS fork | Proven results (1.808 baseline), 13x faster eval, no PyTorch | — Pending |
-| D3 atomic PUA encoding | BPE never splits harakah from letter; ~252 combos fit in PUA range | — Pending |
-| Abdou/arabic-tashkeel-dataset | MIT license, 1.5M examples, paired columns ready for D1/D2 | — Pending |
-| EVAL_TOKENS = 3×524288 | MLX fork default — 13x faster than original, good for iteration | — Pending |
-| Coarse phases | Research experiment, not a product — 3-5 broad phases is right | — Pending |
+| MLX fork over PyTorch/MPS fork | Proven results (1.808 baseline), 13x faster eval, no PyTorch | ✓ Working |
+| D3 atomic PUA encoding | BPE never splits harakah from letter; ~252 combos fit in PUA range | ✓ D3 bpb=1.075 (best) |
+| Abdou/arabic-tashkeel-dataset | MIT license, 1.5M examples, paired columns ready for D1/D2 | ✓ 1.43M train rows loaded |
+| EVAL_TOKENS = 3×524288 | MLX fork default — 13x faster than original, good for iteration | ✓ Working |
+| Coarse phases | Research experiment, not a product — 3-5 broad phases is right | ✓ On track |
+| D1 < D2 on val_bpb | Diacritical marks disambiguate word forms, reducing predictive difficulty | ✓ Confirmed Phase 2 |
+| D3 best baseline (1.075) | Atomic PUA encoding packs letter+diacritic into single codepoint — compact, predictable sequences | ✓ Confirmed Phase 2 |
+| DEFAULT_VOCAB_SIZE stable constant | Mutable global VOCAB_SIZE corrupted get_dirs() path routing — fixed with immutable constant | ✓ Fixed Phase 2 |
 
 ---
-*Last updated: 2026-03-12 after initialization*
+*Last updated: 2026-03-12 after Phase 2 (tokenizer-baseline)*
