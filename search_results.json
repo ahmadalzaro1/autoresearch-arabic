@@ -1,6 +1,7 @@
 {
   "d3": {
     "condition": "d3",
+    "best_val_bpb": 0.889682,
     "val_bpb": 0.889682,
     "memory_gb": 19.5,
     "commit": "532b0d1",
