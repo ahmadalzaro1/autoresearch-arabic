@@ -53,7 +53,6 @@ def test_fertility_report_written() -> None:
 # TOK-03: tokenizer files exist after training (SKIP — integration)
 # ---------------------------------------------------------------------------
 
-@pytest.mark.skip(reason="integration: run after uv run prepare.py --condition d1")
 def test_tokenizer_files_exist() -> None:
     """Checks that tokenizer.pkl and token_bytes.npy exist for all conditions."""
     for condition in ["d1", "d2", "d3"]:
@@ -67,7 +66,6 @@ def test_tokenizer_files_exist() -> None:
 # TOK-04: fertility table has d1/d2/d3 keys (SKIP — integration)
 # ---------------------------------------------------------------------------
 
-@pytest.mark.skip(reason="integration: run after tokenizer sweep completes")
 def test_fertility_table_conditions() -> None:
     """Checks fertility_report.json has d1/d2/d3 keys with plausible float values."""
     import json  # noqa: PLC0415
@@ -101,7 +99,6 @@ def test_fertility_table_conditions() -> None:
 # TOK-04 (extra): D3 tokenizer roundtrip (SKIP — integration)
 # ---------------------------------------------------------------------------
 
-@pytest.mark.skip(reason="integration: run after uv run prepare.py --condition d3")
 def test_d3_tokenizer_roundtrip() -> None:
     """Checks that D3 tokenizer encodes and decodes PUA strings without loss."""
     tokenizer_pkl = BASE_CACHE / "d3" / "tokenizer" / "tokenizer.pkl"

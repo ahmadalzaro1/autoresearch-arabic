@@ -40,6 +40,7 @@ CONDITION = os.environ.get("AUTORESEARCH_CONDITION", "d1")
 
 BASE_CACHE = os.path.join(os.path.expanduser("~"), ".cache", "autoresearch-arabic")
 VOCAB_SIZE = 8192
+DEFAULT_VOCAB_SIZE = 8192  # stable constant — never mutated, used by get_dirs for path routing
 
 # Arabic-aware BPE split pattern: handles Arabic letters, harakat, and PUA atomic tokens
 SPLIT_PATTERN = r"""[\u0621-\u064A\u064B-\u0652\u0670\uE000-\uEFFF]+|[^\r\n\p{L}\p{N}]?+\p{L}+|\p{N}{1,2}| ?[^\s\p{L}\p{N}]++[\r\n]*|\s*[\r\n]|\s+(?!\S)|\s+"""
@@ -67,10 +68,10 @@ def write_fertility_report(condition: str, vocab_size: int, fertility: float) ->
     print(f"Fertility report updated: {report_path}")
 
 
-def get_dirs(condition: str, vocab_size: int = VOCAB_SIZE) -> tuple[str, str, str]:
+def get_dirs(condition: str, vocab_size: int = DEFAULT_VOCAB_SIZE) -> tuple[str, str, str]:
     cache_dir = os.path.join(BASE_CACHE, condition)
     data_dir = os.path.join(cache_dir, "data")
-    if vocab_size == VOCAB_SIZE:
+    if vocab_size == DEFAULT_VOCAB_SIZE:
         tokenizer_dir = os.path.join(cache_dir, "tokenizer")
     else:
         tokenizer_dir = os.path.join(cache_dir, f"tokenizer_{vocab_size}")
