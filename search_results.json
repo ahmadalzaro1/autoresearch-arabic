@@ -35,5 +35,14 @@
     "head_dim": "128",
     "aspect_ratio": "26",
     "total_batch_size": "2**15"
+  },
+  "d2": {
+    "commit": "06e2864",
+    "best_val_bpb": 1.019569,
+    "depth": "4",
+    "window_pattern": "SSS",
+    "head_dim": "128",
+    "aspect_ratio": "24",
+    "total_batch_size": "2**15"
   }
 }
