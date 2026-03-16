@@ -8,8 +8,9 @@ Four phases take the experiment from raw dataset through publishable paper. Phas
 
 - [x] **Phase 1: Data Pipeline** - Download dataset, produce D1/D2/D3 parquet shards, compute homograph collision statistics (completed 2026-03-12)
 - [x] **Phase 2: Tokenizer & Baseline** - Train BPE tokenizers per condition, measure fertility, run baseline val_bpb training (completed 2026-03-12)
-- [ ] **Phase 3: Architecture Search** - Run overnight autoresearch agent loop for D1, D2, D3 (70+ experiments each)
-- [ ] **Phase 4: Analysis & Paper** - Compare winning architectures, run ablations, write paper draft
+- [x] **Phase 3: Architecture Search** - Run overnight autoresearch agent loop for D1, D2, D3 (70+ experiments each) (completed 2026-03-13)
+- [x] **Phase 4: Analysis & Paper** - Compare winning architectures, run ablations, write paper draft (completed 2026-03-13)
+- [x] **Phase 5: Definitive D3 Structural Advantage Experiments** - BPBL metric, embedding similarity analysis, iso-data scaling curves (completed 2026-03-16)
 
 ## Phase Details
 
@@ -57,21 +58,43 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Wave 0 test scaffold: tests/test_search.py with four smoke tests (skips pre-run, passes post-run)
-- [ ] 03-02-PLAN.md — D3 overnight run: branch autoresearch/arabic-d3, 70+ experiments, results_d3.tsv, d3 entry in search_results.json
-- [ ] 03-03-PLAN.md — D1 overnight run: branch autoresearch/arabic-d1, 70+ experiments, results_d1.tsv, d1 entry in search_results.json
-- [ ] 03-04-PLAN.md — D2 overnight run: branch autoresearch/arabic-d2, 70+ experiments, results_d2.tsv, complete search_results.json
+- [x] 03-01-PLAN.md — Wave 0 test scaffold: tests/test_search.py with four smoke tests (skips pre-run, passes post-run)
+- [x] 03-02-PLAN.md — D3 overnight run: branch autoresearch/arabic-d3, 70+ experiments, results_d3.tsv, d3 entry in search_results.json
+- [x] 03-03-PLAN.md — D1 overnight run: branch autoresearch/arabic-d1, 70+ experiments, results_d1.tsv, d1 entry in search_results.json
+- [x] 03-04-PLAN.md — D2 overnight run: branch autoresearch/arabic-d2, 70+ experiments, results_d2.tsv, complete search_results.json
 
 ### Phase 4: Analysis & Paper
-**Goal**: A paper draft exists that makes the D3 encoding argument quantitatively, with comparison tables and ablation results
+**Goal**: A first paper draft exists that explains the D1 < D3 < D2 result quantitatively, with comparison tables, a fixed-architecture robustness ablation, and a revised narrative around the ambiguity tax of stripping harakat
 **Depends on**: Phase 3
 **Requirements**: ANLZ-01, ANLZ-02, ANLZ-03
 **Success Criteria** (what must be TRUE):
-  1. Cross-condition comparison table shows D3 val_bpb vs D1 and D2 at matched parameter count
-  2. Ablation results cover at least depth, vocab size, and window pattern
-  3. Paper draft (LaTeX or Markdown) contains abstract, method, results section with figures, and conclusion
-  4. Paper makes the disambiguation tax argument with the homograph collision statistic from Phase 1
-**Plans**: TBD
+  1. Cross-condition comparison table shows D1, D3, and D2 best val_bpb under the same 5-minute budget, plus baseline deltas and winning architectures
+  2. Analysis includes winning-architecture behavior across conditions plus a fixed-architecture transfer matrix showing whether the ordering survives when architecture is held constant
+  3. Paper draft (LaTeX or Markdown) contains abstract, introduction, method, results, limitations, and conclusion
+  4. Paper uses the Phase 1 collision statistic and Phase 2 fertility table to support the ambiguity-tax argument, while explicitly discussing why D1 beats D3 in this setup
+**Plans**: 3 plans
+
+Plans:
+- [x] 04-01-PLAN.md — Synthesize Phase 1-3 evidence into comparison tables, revised paper narrative, and paper outline
+- [x] 04-02-PLAN.md — Run targeted Phase 4 ablations to test robustness of the D1 < D3 < D2 ordering
+- [x] 04-03-PLAN.md — Draft the paper in Markdown/LaTeX with figures, tables, and limitations
+
+### Phase 5: Definitive D3 Structural Advantage Experiments
+**Goal:** Investigate WHY D3 loses to D1 despite having perfect tokenization. Run experiments that expose the compositionality--atomicity trade-off: D3 eliminates BPE fragmentation but destroys compositional representation in the embedding layer.
+**Depends on:** Phase 4
+**Requirements**: EXP3-01, EXP3-02, EXP4-01, EXP4-02, EXP5-01, EXP5-02
+**Success Criteria** (what must be TRUE):
+  1. BPBL metric computed for D1 and D3 (3 seeds each) confirms D1 beats D3 on the fair, un-gameable metric
+  2. Embedding similarity analysis shows D3 fails to learn compositional representations (low intra-group cosine similarity for PUA embeddings)
+  3. D1 harakah tokens cluster separately from base letters, demonstrating compositional structure
+  4. Iso-data scaling curves at 5 data budgets show how the D1 vs D3 gap evolves with data scale
+  5. Publication-quality figures (heatmaps, scatter plots, scaling curves) ready for paper revision
+**Plans**: 3 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — Setup + BPBL metric: install deps, patch train.py, run 6 training jobs, compute bits-per-base-letter
+- [ ] 05-02-PLAN.md — Embedding similarity analysis: cosine similarity heatmaps, harakah clustering, t-SNE/PCA scatter plots
+- [ ] 05-03-PLAN.md — Iso-data scaling curves: train at 5 data budgets, plot BPBL vs base-letters-processed
 
 ## Progress
 
@@ -79,5 +102,6 @@ Plans:
 |-------|----------------|--------|-----------|
 | 1. Data Pipeline | 3/3 | Complete   | 2026-03-12 |
 | 2. Tokenizer & Baseline | 3/3 | Complete   | 2026-03-12 |
-| 3. Architecture Search | 3/4 | In Progress|  |
-| 4. Analysis & Paper | 0/TBD | Not started | - |
+| 3. Architecture Search | 4/4 | Complete   | 2026-03-13 |
+| 4. Analysis & Paper | 3/3 | Complete   | 2026-03-13 |
+| 5. D3 Structural Experiments | 3/3 | Complete   | 2026-03-16 |
