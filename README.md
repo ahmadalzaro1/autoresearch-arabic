@@ -34,7 +34,7 @@ Using Arabic diacritical marks (harakat) as a controlled test case, we compare t
 
 ```bash
 # Clone and install
-git clone https://github.com/ahmadalzaro/autoresearch-arabic.git
+git clone https://github.com/ahmadalzaro1/autoresearch-arabic.git
 cd autoresearch-arabic
 uv sync
 
@@ -46,9 +46,9 @@ uv run prepare.py
 uv run train.py
 
 # Run experiments
-uv run experiments/exp5_iso_data.py       # Iso-data scaling curves
-uv run experiments/exp3b_bpbl_robust.py   # BPBL metric (10 seeds)
-uv run experiments/exp4_embedding.py      # Embedding analysis
+uv run experiments/iso_data_scaling.py     # Iso-data scaling curves
+uv run experiments/bpbl_evaluation.py     # BPBL metric (10 seeds)
+uv run experiments/embedding_analysis.py  # Embedding analysis
 ```
 
 ## Project Structure
@@ -61,10 +61,10 @@ validate_dataset.py         # Dataset integrity checks
 extract_best.py             # Extract best config from search results
 
 experiments/
-  exp3b_bpbl_robust.py      # BPBL metric with 10-seed robust eval
-  exp4_embedding.py         # Embedding cosine similarity analysis
-  exp5_iso_data.py          # Iso-data scaling curves (D1 vs D3)
-  exp6_shared_arch_iso_data.py  # Architecture confound control
+  bpbl_evaluation.py        # BPBL metric with 10-seed robust eval
+  embedding_analysis.py     # Embedding cosine similarity analysis
+  iso_data_scaling.py       # Iso-data scaling curves (D1 vs D3)
+  architecture_control.py   # Architecture confound control
   results/                  # JSONs + PNGs (committed)
     iso_data_results.json
     bpbl_results_robust.json
